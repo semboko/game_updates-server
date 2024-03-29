@@ -3,9 +3,10 @@ from uvicorn import run
 
 from db.connection import init_database
 from sqlalchemy.orm import Session
+from sqlalchemy.ext.asyncio import AsyncSession
 from schema import SignUpRequest
-from deps import get_db
-from manager.user import create_user, UserError
+from deps import get_db, get_async_db
+from manager.user import create_user, create_user_async, UserError
 
 
 app = FastAPI(
@@ -21,9 +22,9 @@ def onstarup():
 
 
 @app.post("/signup", tags=["authorization"])
-async def create_new_user(data: SignUpRequest, session: Session = Depends(get_db)):
+async def create_new_user(data: SignUpRequest, session: AsyncSession = Depends(get_async_db)):
     try:
-        create_user(session, data.username, data.password)
+        await create_user_async(session, data.username, data.password)
     except UserError:
         raise HTTPException(
             status.HTTP_400_BAD_REQUEST,
