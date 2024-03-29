@@ -12,7 +12,7 @@ def get_db() -> Generator[Session, None, None]:
         db.close()
 
 
-async def get_async_db() -> AsyncGenerator[AsyncSession, None, None]:
+async def get_async_db() -> AsyncGenerator[AsyncSession, None]:
     # session = await AsyncSessionLocal().__aenter__()
     # ....yield... pause...
     # await session.__aexit__()

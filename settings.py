@@ -35,6 +35,20 @@ class Settings(BaseSettings):
             self.postgres_db
         )
 
+    def get_postgres_async_url(self):
+        return (
+            "postgresql+asyncpg://" +
+            self.postgres_user +
+            ":" +
+            self.postgres_password +
+            "@" +
+            self.postgres_host +
+            ":" +
+            str(self.postgres_port) +
+            "/" +
+            self.postgres_db
+        )
+
 
 settings = Settings()
 settings.load_cent_config()
