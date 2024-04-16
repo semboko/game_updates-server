@@ -19,6 +19,6 @@ class Game(PublicEvent):
     waiting_left: float = 10.0
 
 
-class SignUpRequest(BaseModel):
+class Credentials(BaseModel):
     username: str
     password: str

@@ -10,6 +10,8 @@ class Settings(BaseSettings):
     cent_apikey: Optional[str] = None
     cent_url: str = "http://0.0.0.0:8910"
 
+    jwt_secret: str = ""
+
     postgres_host: str = "0.0.0.0"
     postgres_port: int = 8911
     postgres_user: str = "admin"
@@ -20,10 +22,11 @@ class Settings(BaseSettings):
         with open("./config.json", "r") as conf_file:
             conf = load(conf_file)
             self.cent_apikey = conf["api_key"]
+            self.jwt_secret = conf["token_hmac_secret_key"]
 
-    def get_postgres_url(self):
+    def get_postgres_url(self, protocol: str = "postgresql"):
         return (
-            "postgresql://" +
+            protocol + "://" +
             self.postgres_user +
             ":" +
             self.postgres_password +
