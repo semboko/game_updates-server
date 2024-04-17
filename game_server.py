@@ -66,7 +66,7 @@ async def authorize_user(
         )
 
     result = encode(payload={
-        "sub": user.id,
+        "sub": str(user.id),
         "username": user.username,
         "iat": datetime.now(UTC).timestamp()
     }, key=settings.jwt_secret, algorithm="HS256")

@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://unpkg.com/centrifuge@5.0.1/dist/centrifuge.js"></script>
+    <title>Test Websockets</title>
+</head>
+<body>
+    <script>
+        const centrifuge = new Centrifuge(`ws://${window.location.host}/ws/connection/websocket`, {
+            token: null
+        });
+
+        
+        centrifuge.on('connecting', function (ctx) {
+            const statusHeader = document.getElementById("status")
+            statusHeader.innerHTML = "Connecting..."
+            statusHeader.setAttribute("style", "color: rgb(156, 156, 156);")
+            console.log(`connecting: ${ctx.code}, ${ctx.reason}`);
+        }).on('connected', function (ctx) {
+            const statusHeader = document.getElementById("status")
+            statusHeader.innerHTML = "Connected"
+            statusHeader.setAttribute("style", "color: rgb(73, 179, 91);")
+            console.log(`connected over ${ctx.transport}`);
+        }).on('disconnected', function (ctx) {
+            const statusHeader = document.getElementById("status")
+            statusHeader.innerHTML = "Disconnected"
+            statusHeader.setAttribute("style", "color: rgb(255, 153, 153);")
+            console.log(`disconnected: ${ctx.code}, ${ctx.reason}`);
+        })
+
+        const sub = centrifuge.newSubscription("public_updates")
+        sub.on('subscribing', function(ctx) {
+            console.log('subscribing');
+        });
+        
+        sub.on('subscribed', function(ctx) {
+            console.log('subscribed');
+        });
+        
+        sub.on('unsubscribed', function(ctx) {
+            console.log('unsubscribed');
+        });
+
+        sub.on("publication", (ctx) => {
+            document.getElementById("coef").innerHTML = ctx.data
+        })
+
+        const getToken = async () => {
+            await fetch("/api/signup", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    username: "bo",
+                    password: "bo",
+                })
+            }).then((res) => {
+                if(res.status === 400){
+                    console.log("Already exists")
+                } else {
+                    console.log("New user cerated")
+                }
+            })
+
+            const signin_res = await fetch("/api/signin", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    username: "bo",
+                    password: "bo",
+                })
+            })
+            const token = await signin_res.json()
+            localStorage.setItem("token", token)
+            centrifuge.setToken(token)
+        }
+    </script>
+
+    <h1>Test Websockets</h1>
+    <h2 id="status" style="color: rgb(255, 153, 153);">Disconnected</h2>
+    
+    <h3>Authorization</h3>
+    <button onclick="getToken()">Get Token</button>
+    
+    <h3>Websocket Control</h3>
+    <button onclick="centrifuge.connect()">Connect to ws</button>
+    <button onclick="centrifuge.disconnect()">Disconnect</button>
+
+    <h3>Subscription Control</h3>
+    <button onclick="sub.subscribe()">Subscribe to updates</button>
+    <span id="coef"></span>
+</body>
+</html>

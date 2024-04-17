@@ -7,5 +7,6 @@
     "allowed_origins": ["*"],
     "allow_anonymous_connect_without_token": true,
     "client_insecure_skip_token_signature_verify": true,
-    "debug": true
+    "debug": true,
+    "allow_subscribe_for_client": true
   }
