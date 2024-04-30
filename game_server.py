@@ -5,7 +5,7 @@ from db.connection import init_database
 from sqlalchemy.orm import Session
 from sqlalchemy.ext.asyncio import AsyncSession
 from schema import Credentials
-from deps import get_db, get_async_db, get_jwt
+from deps import get_db, get_async_db, get_jwt, get_user_id
 from manager.user import (
     create_user,
     UserError,
@@ -13,6 +13,7 @@ from manager.user import (
     check_user,
     get_user_by_id,
 )
+from manager.money import get_user_accounts
 from datetime import datetime, UTC
 from settings import settings
 from jwt import encode, decode
@@ -101,6 +102,15 @@ async def verify_token(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail=f"Wrong username for user with id {claims["sub"]}"
         )
+
+
+@app.route("/balance")
+async def check_balance(
+    user_id: int = Depends(get_user_id),
+    db: AsyncSession = Depends(get_async_db),
+):
+    accounts = await get_user_accounts(db, user_id)
+    print(accounts)
 
 
 def start_server():
