@@ -1,0 +1,1 @@
+alter table player add column role integer default 0 not null;

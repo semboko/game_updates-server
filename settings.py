@@ -26,16 +26,17 @@ class Settings(BaseSettings):
 
     def get_postgres_url(self, protocol: str = "postgresql"):
         return (
-            protocol + "://" +
-            self.postgres_user +
-            ":" +
-            self.postgres_password +
-            "@" +
-            self.postgres_host +
-            ":" +
-            str(self.postgres_port) +
-            "/" +
-            self.postgres_db
+            protocol
+            + "://"
+            + self.postgres_user
+            + ":"
+            + self.postgres_password
+            + "@"
+            + self.postgres_host
+            + ":"
+            + str(self.postgres_port)
+            + "/"
+            + self.postgres_db
         )
 
 

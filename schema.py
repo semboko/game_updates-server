@@ -22,3 +22,19 @@ class Game(PublicEvent):
 class Credentials(BaseModel):
     username: str
     password: str
+
+
+class CurrencyModel(BaseModel):
+    id: int
+    name_short: str
+
+
+class AccountBalance(BaseModel):
+    account_id: int
+    currency_name: str
+    amount: Decimal
+
+
+class TopUpRequest(BaseModel):
+    account_id: int
+    amount: Decimal

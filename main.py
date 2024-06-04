@@ -22,7 +22,7 @@ parser.add_argument(
     required=True,
     help="""
         Defines what process will be launched
-    """
+    """,
 )
 
 args = parser.parse_args()

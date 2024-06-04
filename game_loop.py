@@ -28,14 +28,9 @@ def start_loop():
 
         res = requests.post(
             settings.cent_url + "/api/publish",
-            json={
-                "channel": "public_updates",
-                "data": public.model_dump_json()
-            },
-            headers={
-                "X-API-Key": settings.cent_apikey
-            },
-            timeout=1
+            json={"channel": "public_updates", "data": public.model_dump_json()},
+            headers={"X-API-Key": settings.cent_apikey},
+            timeout=1,
         )
         print(res.status_code, res.content, public.model_dump_json())
         assert res.status_code == 200
